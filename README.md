@@ -15,11 +15,6 @@ Add the following to .env.development to set the development environment variabl
 
 PGDATABASE=nc_news
 
-.gitignore file must contain the following:
-
-node_modules
-.env.*
-
 Run the following in the terminal to install dependencies and dev dependencies:
 
 npm install
