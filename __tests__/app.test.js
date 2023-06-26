@@ -7,7 +7,7 @@ const app = require("../app");
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
-describe("CORE: GET /api/topics test suite", () => {
+describe("CORE: GET /api/topics functionality test suite", () => {
     test("returns a 200 GET request with an array of of topic objects, each with a slug and description properties", () => {
         return request(app)
         .get("/api/topics")
@@ -20,6 +20,8 @@ describe("CORE: GET /api/topics test suite", () => {
             })
         });
     });
+});
+describe("CORE: GET /api/topics error test suite", () => {
     test("returns a 404 with an error message when passed an invalid endpoint", () => {
         return request(app)
         .get("/api/toppics")
@@ -27,5 +29,5 @@ describe("CORE: GET /api/topics test suite", () => {
         .then(({ body }) => {
             expect(body.msg).toBe("Path not found.");
         })
-    });
+    });    
 });
