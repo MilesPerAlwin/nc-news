@@ -20,10 +20,12 @@ describe("CORE: GET /api/topics test suite", () => {
             })
         });
     });
+    test("returns a 404 with an error message when passed an invalid endpoint", () => {
+        return request(app)
+        .get("/api/toppics")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Path not found.");
+        })
+    });
 });
-// test ideas for GET /api/topics:
-
-// TEST FOR POSSIBLE ERRORS FOR THIS ONE
-
-// get all topics
-// responds with array of topic objects, each of which have slug and description properties
