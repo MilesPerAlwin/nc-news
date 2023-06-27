@@ -42,3 +42,35 @@ describe("CORE: GET /api functionality test suite", () => {
         })
     });
 });
+describe("CORE: GET /api/articles/:article_id functionality test suite", () => {
+    test("returns a 200 GET request with an article object corresponding to the given article id", () => {
+        return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.article).toHaveLength(1);
+            expect(body).toEqual({ article: [
+                {
+                    article_id: 1,
+                    title: "Living in the shadow of a great man",
+                    topic: "mitch",
+                    author: "butter_bridge",
+                    body: "I find this existence challenging",
+                    created_at: "2020-07-09T20:11:00.000Z",
+                    votes: 100,
+                    article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+                }
+                ]
+            });
+        })
+    });
+});
+
+// test for error handling
+
+// func test 1 - returns an array with an article object with the specified id
+// error test 1 - 400 error (bad request) - given a wrong ID
+// error test 2 - 404 error - given a valid id but doesn't exist
+// take into account that id is fine, but returns an empty array cos no articles with that id
+
+// look at lecture from this morning - error when given a good ID but doesn't exist, given a bad ID
