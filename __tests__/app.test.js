@@ -48,9 +48,8 @@ describe("CORE: GET /api/articles/:article_id functionality test suite", () => {
         .get("/api/articles/1")
         .expect(200)
         .then(({ body }) => {
-            expect(body.article).toHaveLength(1);
-            expect(body).toEqual({ article: [
-                {
+            expect(body).toHaveProperty("article");
+            expect(body.article).toEqual({
                     article_id: 1,
                     title: "Living in the shadow of a great man",
                     topic: "mitch",
@@ -60,8 +59,7 @@ describe("CORE: GET /api/articles/:article_id functionality test suite", () => {
                     votes: 100,
                     article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
                 }
-                ]
-            });
+            );
         })
     });
 });
