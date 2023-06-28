@@ -65,10 +65,19 @@ describe("CORE: GET /api/articles/:article_id functionality test suite", () => {
         })
     });
 });
+describe("CORE: GET /api/articles/:article_id error test suite", () => {
+    test("returns a 400 with an error message when passed an invalid article id", () => {
+        return request(app)
+        .get("/api/articles/1q")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.");
+        })
+    })
+});
 
 // test for error handling
 
-// func test 1 - returns an array with an article object with the specified id
 // error test 1 - 400 error (bad request) - given a wrong ID
 // error test 2 - 404 error - given a valid id but doesn't exist
 // take into account that id is fine, but returns an empty array cos no articles with that id
