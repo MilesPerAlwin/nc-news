@@ -81,3 +81,54 @@ describe("CORE: GET /api/articles/:article_id error test suite", () => {
         })
     })
 });
+describe("CORE: GET /api/articles functionality test suite", () => {
+    test("returns a 200 GET request with an article array of article objects without a body property in date descending order", () => {   
+        return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(13);
+            const isSorted = body.articles.every((val, i, arr) => !i || arr[i-1].created_at >= val.created_at);
+            expect(isSorted).toBe(true);
+
+            const commentCounts = {
+                1: 11,
+                2: 0,
+                3: 2,
+                4: 0,
+                5: 2,
+                6: 1,
+                7: 0,
+                8: 0,
+                9: 2,
+                10: 0,
+                11: 0,
+                12: 0,
+                13: 0
+            };
+            
+            body.articles.forEach((article) => {
+                expect(article).toHaveProperty("title");
+                expect(article).toHaveProperty("topic");
+                expect(article).toHaveProperty("author");
+                expect(article).toHaveProperty("created_at");
+                expect(article).toHaveProperty("article_img_url");
+                expect(article).toHaveProperty("article_id");
+                expect(article).toHaveProperty("votes");
+                expect(article).toHaveProperty("comment_count");
+                expect(article).not.toHaveProperty("body");
+                expect(article.comment_count).toBe(commentCounts[article.article_id])
+            })
+        });
+    })
+});
+describe("CORE: GET /api/articles error test suite", () => {
+    test("returns a 404 with an error message when pased an invalid endpoint", () => {
+        return request(app)
+        .get("/api/arrticles")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Path not found.");
+        })
+    });
+});
