@@ -74,12 +74,12 @@ describe("CORE: GET /api/articles/:article_id error test suite", () => {
             expect(body.msg).toBe("Bad request.");
         })
     })
+    test("returns a 404 with an error message when passed a valid id that does not exist", () => {
+        return request(app)
+        .get("/api/articles/9999")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Not found.");
+        })
+    })
 });
-
-// test for error handling
-
-// error test 1 - 400 error (bad request) - given a wrong ID
-// error test 2 - 404 error - given a valid id but doesn't exist
-// take into account that id is fine, but returns an empty array cos no articles with that id
-
-// look at lecture from this morning - error when given a good ID but doesn't exist, given a bad ID
