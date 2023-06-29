@@ -14,7 +14,6 @@ exports.getArticleById = (req, res, next) => {
 exports.getArticles = (req, res, next) => {
     selectArticles()
     .then((articlesArr) => {
-        // currently returning articles array in DESC order, but no comment_count
         res.status(200).send({ articles: articlesArr });
     })
 }

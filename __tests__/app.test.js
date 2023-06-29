@@ -86,7 +86,7 @@ describe("CORE: GET /api/articles functionality test suite", () => {
         return request(app)
         .get("/api/articles")
         .expect(200)
-        .then(({ body }) => {
+        .then(({ body }) => {    
             expect(body.articles).toHaveLength(13);
             const isSorted = body.articles.every((val, i, arr) => !i || arr[i-1].created_at >= val.created_at);
             expect(isSorted).toBe(true);
