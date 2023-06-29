@@ -1,4 +1,4 @@
-const { selectArticleById, selectArticles } = require("../models/articles-model");
+const { selectArticleById, selectArticles, insertComments } = require("../models/articles-model");
 
 exports.getArticleById = (req, res, next) => {
     const { article_id } = req.params;
@@ -18,3 +18,7 @@ exports.getArticles = (req, res, next) => {
     })
 }
 
+exports.postComments = (req, res) => {
+    console.log(req.params, req.body)
+    insertComments(req.body, req.params);
+}

@@ -24,3 +24,17 @@ exports.selectArticles = (req, res) => {
         return rows;
     })
 }
+
+exports.insertComments = (req, res) => {
+    // const { username, body } = req;
+    console.log(req);
+    // return db.query(
+    //     `INSERT INTO comments (body, )`
+    //     )
+}
+
+
+// insert username to author
+// body into body
+// article id into article id
+// sql injection

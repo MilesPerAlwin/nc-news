@@ -132,3 +132,15 @@ describe("CORE: GET /api/articles error test suite", () => {
         })
     });
 });
+describe("CORE: POST /api/articles/:article_id/comments functionality test suite", () => {
+    // test("returns a 201 POST with a comment object of the posted comment to the given article", () => {
+    //     return request(app)
+    //     .post("/api/articles/1/comments")
+    //     .send({ "username": "MilesPerAlwin", "body": "BANANA!" })
+    //     .expect(201)
+    //     .then(({ body }) => {
+    //         expect(body.comment).toHaveProperty("username");
+    //         expect(body.comment).toHaveProperty("body");
+    //     })
+    // })
+})
