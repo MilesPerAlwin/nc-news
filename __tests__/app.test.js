@@ -147,6 +147,21 @@ describe("CORE: POST /api/articles/:article_id/comments functionality test suite
             expect(body.comment).toHaveProperty("votes");
         })
     })
+    test("returns a 201 POST and ignores unnecessary properties on the sent comment", () => {
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({ "username": "lurker", "body": "BANANA!", "age": 10 })
+        .expect(201)
+        .then(({ body }) => {
+            expect(body.comment).toHaveProperty("author");
+            expect(body.comment).toHaveProperty("body");
+            expect(body.comment).toHaveProperty("article_id");
+            expect(body.comment).toHaveProperty("comment_id");
+            expect(body.comment).toHaveProperty("created_at");
+            expect(body.comment).toHaveProperty("votes");
+            expect(body.comment).not.toHaveProperty("age");
+        })
+    })
 });
 describe("CORE: POST /api/articles/:article_id/comments error test suite", () => {
     test("returns a 404 with an error message when passed a valid article id but user does not exist", () => {
