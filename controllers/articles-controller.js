@@ -23,7 +23,6 @@ exports.postComments = (req, res, next) => {
 
     insertComments(req.body, article_id)
     .then((comment) => {
-        console.log(comment);
         res.status(201).send({ comment: comment });
     })
     .catch((err) => {
