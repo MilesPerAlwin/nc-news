@@ -182,7 +182,7 @@ describe("CORE: POST /api/articles/:article_id/comments error test suite", () =>
         .send({ "username": "lurker" })
         .expect(400)
         .then(({ body }) => {
-            expect(body.msg).toBe("Bad request.");
+            expect(body.msg).toBe("Invalid body passed.");
         })
     })
     test("returns a 400 when passed an empty json request", () => {
@@ -191,7 +191,7 @@ describe("CORE: POST /api/articles/:article_id/comments error test suite", () =>
         .send()
         .expect(400)
         .then(({ body }) => {
-            expect(body.msg).toBe("Bad request.");
+            expect(body.msg).toBe("Invalid body passed.");
         })
     })
 });
