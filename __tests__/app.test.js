@@ -149,7 +149,7 @@ describe("CORE: POST /api/articles/:article_id/comments functionality test suite
     })
 });
 describe("CORE: POST /api/articles/:article_id/comments error test suite", () => {
-    test("returns a 400 with an error message when passed a valid article id but user does not exist", () => {
+    test("returns a 404 with an error message when passed a valid article id but user does not exist", () => {
         return request(app)
         .post("/api/articles/1/comments")
         .send({ "username": "lurker55555", "body": "BANANA!" })
