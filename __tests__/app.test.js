@@ -133,14 +133,35 @@ describe("CORE: GET /api/articles error test suite", () => {
     });
 });
 describe("CORE: POST /api/articles/:article_id/comments functionality test suite", () => {
-    // test("returns a 201 POST with a comment object of the posted comment to the given article", () => {
-    //     return request(app)
-    //     .post("/api/articles/1/comments")
-    //     .send({ "username": "MilesPerAlwin", "body": "BANANA!" })
-    //     .expect(201)
-    //     .then(({ body }) => {
-    //         expect(body.comment).toHaveProperty("username");
-    //         expect(body.comment).toHaveProperty("body");
-    //     })
-    // })
-})
+    test("returns a 201 POST with a comment object of the posted comment to the given article", () => {
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({ "username": "lurker", "body": "BANANA!" })
+        .expect(201)
+        .then(({ body }) => {
+            expect(body.comment).toHaveProperty("author");
+            expect(body.comment).toHaveProperty("body");
+            expect(body.comment).toHaveProperty("article_id");
+            expect(body.comment).toHaveProperty("comment_id");
+            expect(body.comment).toHaveProperty("created_at");
+            expect(body.comment).toHaveProperty("votes");
+        })
+    })
+});
+// describe("CORE: POST /api/articles/:article_id/comments error test suite", () => {
+//     test("returns a 400 with an error message when passed an invalid article id", () => {
+//         return request(app)
+//         .get("/api/articles/banana/comments")
+//         .expect(400)
+//         .then(({ body }) => {
+//             expect(body.msg).toBe("Bad request.");
+//         })
+//     })
+// });
+
+// error tests:
+// test for article that does exist for user that doesn't exist - 400
+// test for 404 for posting to an article that doesn't exist
+// test for invalid article id
+// send a post without any data - user exists but no body property - 400
+// test for no overall body in json request - 400

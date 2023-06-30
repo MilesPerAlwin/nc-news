@@ -25,16 +25,17 @@ exports.selectArticles = (req, res) => {
     })
 }
 
-exports.insertComments = (req, res) => {
-    // const { username, body } = req;
-    console.log(req);
-    // return db.query(
-    //     `INSERT INTO comments (body, )`
-    //     )
+exports.insertComments = (req, article_id) => {
+    
+    const parsedArticleId = parseInt(article_id)
+
+    const { username, body } = req;
+    return db.query(
+        `INSERT INTO comments (article_id, body, author) 
+        VALUES ($1, $2, $3)
+        RETURNING *`, [parsedArticleId, body, username]
+        )
+        .then(({ rows }) => {
+            return rows[0];
+        })
 }
-
-
-// insert username to author
-// body into body
-// article id into article id
-// sql injection
