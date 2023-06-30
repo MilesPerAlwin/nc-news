@@ -153,9 +153,9 @@ describe("CORE: POST /api/articles/:article_id/comments error test suite", () =>
         return request(app)
         .post("/api/articles/1/comments")
         .send({ "username": "lurker55555", "body": "BANANA!" })
-        .expect(400)
+        .expect(404)
         .then(({ body }) => {
-            expect(body.msg).toBe("Bad request.");
+            expect(body.msg).toBe("Not found.");
         })
     })
     test("returns a 404 with an error message when passed a valid article id that does not exist", () => {

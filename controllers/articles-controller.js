@@ -21,15 +21,10 @@ exports.getArticles = (req, res, next) => {
 exports.postComments = (req, res, next) => {
     const { article_id } = req.params
 
-    checkArticleExists(article_id)
-    .then((articleResult) => {
-        insertComments(req.body, article_id)
-        .then((comment) => {
-            res.status(201).send({ comment: comment });
-        })
-        .catch((err) => {
-            next(err);
-        })
+    insertComments(req.body, article_id)
+    .then((comment) => {
+        console.log(comment);
+        res.status(201).send({ comment: comment });
     })
     .catch((err) => {
         next(err);

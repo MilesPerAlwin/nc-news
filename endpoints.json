@@ -43,5 +43,21 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts a comment to given article and serves comment object corresponding to the posted comment",
+    "queries": [],
+    "exampleResponse": {
+      "comment": [
+        {
+          "comment_id": 19,
+          "body": "BANANA!",
+          "article_id": 1,
+          "author": "lurker",
+          "votes": 0,
+          "created_at": "2023-06-30T13:02:36.825Z"
+        }
+      ]
+    }
   }
 }
