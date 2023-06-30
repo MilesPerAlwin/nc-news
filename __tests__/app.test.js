@@ -148,20 +148,50 @@ describe("CORE: POST /api/articles/:article_id/comments functionality test suite
         })
     })
 });
-// describe("CORE: POST /api/articles/:article_id/comments error test suite", () => {
-//     test("returns a 400 with an error message when passed an invalid article id", () => {
-//         return request(app)
-//         .get("/api/articles/banana/comments")
-//         .expect(400)
-//         .then(({ body }) => {
-//             expect(body.msg).toBe("Bad request.");
-//         })
-//     })
-// });
-
-// error tests:
-// test for article that does exist for user that doesn't exist - 400
-// test for 404 for posting to an article that doesn't exist
-// test for invalid article id
-// send a post without any data - user exists but no body property - 400
-// test for no overall body in json request - 400
+describe("CORE: POST /api/articles/:article_id/comments error test suite", () => {
+    test("returns a 400 with an error message when passed a valid article id but user does not exist", () => {
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({ "username": "lurker55555", "body": "BANANA!" })
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.");
+        })
+    })
+    test("returns a 400 with an error message when passed a valid article id that does not exist", () => {
+        return request(app)
+        .post("/api/articles/9999/comments")
+        .send({ "username": "lurker", "body": "BANANA!" })
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.");
+        })
+    })
+    test("returns a 400 when passed an invalid article id", () => {
+        return request(app)
+        .post("/api/articles/banana/comments")
+        .send({ "username": "lurker", "body": "BANANA!" })
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.");
+        })
+    })
+    test("returns a 400 when passed a json request with no comment", () => {
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({ "username": "lurker" })
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.");
+        })
+    })
+    test("returns a 400 when passed an empty json request", () => {
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send()
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.");
+        })
+    })
+});
