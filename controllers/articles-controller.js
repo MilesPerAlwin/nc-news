@@ -1,4 +1,4 @@
-const { selectArticleById, selectArticles, selectCommentsById, checkArticleExists } = require("../models/articles-model");
+const { selectArticleById, selectArticles, insertComments, selectCommentsById, checkArticleExists } = require("../models/articles-model");
 
 exports.getArticleById = (req, res, next) => {
     const { article_id } = req.params;
@@ -18,6 +18,19 @@ exports.getArticles = (req, res, next) => {
     })
 }
 
+
+exports.postComments = (req, res, next) => {
+    const { article_id } = req.params
+
+    insertComments(req.body, article_id)
+    .then((comment) => {
+        res.status(201).send({ comment });
+      })
+    .catch((err) => {
+        next(err);
+    })
+}
+        
 exports.getCommentsById = (req, res, next) => {
     const { article_id } = req.params;
 

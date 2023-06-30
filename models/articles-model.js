@@ -25,6 +25,22 @@ exports.selectArticles = (req, res) => {
     })
 }
 
+exports.insertComments = (req, article_id) => {
+    
+    const parsedArticleId = parseInt(article_id)
+
+    const { username, body } = req;
+    return db.query(
+        `INSERT INTO comments (article_id, body, author) 
+        VALUES ($1, $2, $3)
+        RETURNING *`, [parsedArticleId, body, username]
+        )
+        .then(({ rows }) => {
+            return rows[0];
+        })
+}
+
+  
 exports.selectCommentsById = (req, res) => {
     return db.query(
         `SELECT * FROM comments 

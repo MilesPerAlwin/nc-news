@@ -177,3 +177,81 @@ describe("CORE: GET /api/articles/:article_id/comments error test suite", () => 
         })
     })
 })
+describe("CORE: POST /api/articles/:article_id/comments functionality test suite", () => {
+    test("returns a 201 POST with a comment object of the posted comment to the given article", () => {
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({ "username": "lurker", "body": "BANANA!" })
+        .expect(201)
+        .then(({ body }) => {
+            expect(body.comment).toHaveProperty("author");
+            expect(body.comment).toHaveProperty("body");
+            expect(body.comment).toHaveProperty("article_id");
+            expect(body.comment).toHaveProperty("comment_id");
+            expect(body.comment).toHaveProperty("created_at");
+            expect(body.comment).toHaveProperty("votes");
+        })
+    })
+    test("returns a 201 POST and ignores unnecessary properties on the sent comment", () => {
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({ "username": "lurker", "body": "BANANA!", "age": 10 })
+        .expect(201)
+        .then(({ body }) => {
+            expect(body.comment).toHaveProperty("author");
+            expect(body.comment).toHaveProperty("body");
+            expect(body.comment).toHaveProperty("article_id");
+            expect(body.comment).toHaveProperty("comment_id");
+            expect(body.comment).toHaveProperty("created_at");
+            expect(body.comment).toHaveProperty("votes");
+            expect(body.comment).not.toHaveProperty("age");
+        })
+    })
+});
+describe("CORE: POST /api/articles/:article_id/comments error test suite", () => {
+    test("returns a 404 with an error message when passed a valid article id but user does not exist", () => {
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({ "username": "lurker55555", "body": "BANANA!" })
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Not found.");
+        })
+    })
+    test("returns a 404 with an error message when passed a valid article id that does not exist", () => {
+        return request(app)
+        .post("/api/articles/9999/comments")
+        .send({ "username": "lurker", "body": "BANANA!" })
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Not found.");
+        })
+    })
+    test("returns a 400 when passed an invalid article id", () => {
+        return request(app)
+        .post("/api/articles/banana/comments")
+        .send({ "username": "lurker", "body": "BANANA!" })
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.");
+        })
+    })
+    test("returns a 400 when passed a json request with no comment", () => {
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({ "username": "lurker" })
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Invalid body passed.");
+        })
+    })
+    test("returns a 400 when passed an empty json request", () => {
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send()
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Invalid body passed.");
+        })
+    })
+});
