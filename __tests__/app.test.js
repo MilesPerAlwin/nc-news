@@ -340,3 +340,28 @@ describe("CORE: PATCH /api/articles/:article_id error test suite", () => {
         })
     })
 })
+describe("CORE: DELETE /api/comments/:comment_id functionality test suite", () => {
+    test("returns a 204 response upon successful deletion", () => {
+        return request(app)
+        .delete("/api/comments/2")
+        .expect(204)
+    })
+});
+describe("CORE: DELETE /api/comments/:comment_id error test suite", () => {
+    test("returns a 404 when passed a valid comment id that does not exist", () => {
+        return request(app)
+        .delete("/api/comments/9999")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Not found.");
+        })
+    })
+    test("returns a 400 when passed an invalid comment id", () => {
+        return request(app)
+        .delete("/api/comments/banana")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.");
+        })
+    })
+});

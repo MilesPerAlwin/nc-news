@@ -77,7 +77,7 @@
     }
   },
   "PATCH /api/articles/:article_id": {
-    "description": "",
+    "description": "increases or decreases the number of votes on a given article and serves the article",
     "queries": [],
     "exampleResponse": {
       "article": [
@@ -93,5 +93,10 @@
         }
       ]
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes the given comment",
+    "queries": [],
+    "exampleResponse": {}
   }
 }
