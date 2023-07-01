@@ -255,3 +255,88 @@ describe("CORE: POST /api/articles/:article_id/comments error test suite", () =>
         })
     })
 });
+describe("CORE: PATCH /api/articles/:article_id functionality test suite", () => {
+    test("returns a 200 PATCH with an article object with the votes increased for the given updated article", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 1 })
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.article).toHaveProperty("title");
+            expect(body.article).toHaveProperty("topic");
+            expect(body.article).toHaveProperty("author");
+            expect(body.article).toHaveProperty("created_at");
+            expect(body.article).toHaveProperty("article_img_url");
+            expect(body.article).toHaveProperty("article_id");
+            expect(body.article).toHaveProperty("votes");
+            expect(body.article).toHaveProperty("body");
+            expect(body.article.votes).toBe(101);
+        })
+    })
+    test("returns a 200 PATCH with the votes decreased for the given article to update", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: -1 })
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.article.votes).toBe(99);
+        })
+    })
+    test("returns a 200 PATCH with the votes value unchanged for the given article to update when sent a request of zero votes", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 0 })
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.article.votes).toBe(100);
+        })
+    })
+    test("returns a 200 PATCH and ignores unnecessary properties on the sent votes request", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 1, banana: "I'm a banana" })
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.article).not.toHaveProperty("banana");
+            expect(body.article.votes).toBe(101);
+        })
+    })
+    test("returns a 200 PATCH with votes at zero when given a request to decrease votes for the given article that is greater than the current number of votes", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: -101 })
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.article.votes).toBe(0);
+        })
+    })
+});
+describe("CORE: PATCH /api/articles/:article_id error test suite", () => {
+    test("return a 400 when passed an empty json request", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send()
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Invalid body passed.")
+        })
+    })
+    test("return a 400 when passed an invalid value on the inc_votes property", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: "banana" })
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.")
+        })
+    })
+    test("return a 404 when passed a valid article id that does not exist", () => {
+        return request(app)
+        .patch("/api/articles/9999")
+        .send({ inc_votes: 1 })
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Not found.");
+        })
+    })
+})

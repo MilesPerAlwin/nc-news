@@ -44,23 +44,6 @@
       ]
     }
   },
-  "POST /api/articles/:article_id/comments": {
-    "description": "posts a comment to given article and serves comment object corresponding to the posted comment",
-    "queries": [],
-    "exampleResponse": {
-      "comment": [
-        {
-          "comment_id": 19,
-          "body": "BANANA!",
-          "article_id": 1,
-          "author": "lurker",
-          "votes": 0,
-          "created_at": "2023-06-30T13:02:36.825Z"
-           }
-      ]
-    }
-  },
-
   "GET /api/articles/:article_id/comments": {
     "description": "serves a comments object corresponding to the given article_id",
     "queries": [],
@@ -73,7 +56,40 @@
           "author": "butter_bridge",
           "votes": 14,
           "created_at": "2020-10-31T03:03:00.000Z"
-
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts a comment to given article and serves comment object corresponding to the posted comment",
+    "queries": [],
+    "exampleResponse": {
+      "comment": [
+        {
+          "comment_id": 19,
+          "body": "BANANA!",
+          "article_id": 1,
+          "author": "lurker",
+          "votes": 0,
+          "created_at": "2023-06-30T13:02:36.825Z"
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "",
+    "queries": [],
+    "exampleResponse": {
+      "article": [
+        {
+          "article_id": 1,
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": "2020-07-09T20:11:00.000Z",
+          "votes": 101,
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
         }
       ]
     }
