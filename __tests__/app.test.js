@@ -311,16 +311,32 @@ describe("CORE: PATCH /api/articles/:article_id functionality test suite", () =>
         })
     })
 });
-
-
-// + 200 - successfully increases votes
-// + 200 - successfully decreases votes
-// + 200 - successfully keeps votes the same if sent zero votes
-// + 200 - ignores unnecessary properties on the sent votes
-// + 200 - successfully doesn't go to minus votes if reached zero votes
-// 400 - returns 400 when passed an empty json object
-// 400 - returns 400 when sent an invalid value on inc_vote propert
-// 404 - passed a valid no. votes but article doesn't exist
-
-
-// UPDATE ENDPOINT.JSON!!!
+describe("CORE: PATCH /api/articles/:article_id error test suite", () => {
+    test("return a 400 when passed an empty json request", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send()
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Invalid body passed.")
+        })
+    })
+    test("return a 400 when passed an invalid value on the inc_votes property", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: "banana" })
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.")
+        })
+    })
+    test("return a 404 when passed a valid article id that does not exist", () => {
+        return request(app)
+        .patch("/api/articles/9999")
+        .send({ inc_votes: 1 })
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Not found.");
+        })
+    })
+})
