@@ -59,3 +59,16 @@ exports.checkArticleExists = (article_id) => {
             }
         })
 }
+
+exports.updateArticleVotes = (req, article_id) => {
+
+    return db.query(
+        `UPDATE articles
+        SET votes = GREATEST(0, ((SELECT votes FROM articles WHERE article_id = $1) + $2))
+        WHERE article_id = $1
+        RETURNING *`, [article_id, req.inc_votes])
+        .then(({ rows }) => {
+            return rows[0];
+        })
+
+}

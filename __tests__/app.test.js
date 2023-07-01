@@ -255,3 +255,72 @@ describe("CORE: POST /api/articles/:article_id/comments error test suite", () =>
         })
     })
 });
+describe("CORE: PATCH /api/articles/:article_id functionality test suite", () => {
+    test("returns a 200 PATCH with an article object with the votes increased for the given updated article", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 1 })
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.article).toHaveProperty("title");
+            expect(body.article).toHaveProperty("topic");
+            expect(body.article).toHaveProperty("author");
+            expect(body.article).toHaveProperty("created_at");
+            expect(body.article).toHaveProperty("article_img_url");
+            expect(body.article).toHaveProperty("article_id");
+            expect(body.article).toHaveProperty("votes");
+            expect(body.article).toHaveProperty("body");
+            expect(body.article.votes).toBe(101);
+        })
+    })
+    test("returns a 200 PATCH with the votes decreased for the given article to update", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: -1 })
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.article.votes).toBe(99);
+        })
+    })
+    test("returns a 200 PATCH with the votes value unchanged for the given article to update when sent a request of zero votes", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 0 })
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.article.votes).toBe(100);
+        })
+    })
+    test("returns a 200 PATCH and ignores unnecessary properties on the sent votes request", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 1, banana: "I'm a banana" })
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.article).not.toHaveProperty("banana");
+            expect(body.article.votes).toBe(101);
+        })
+    })
+    test("returns a 200 PATCH with votes at zero when given a request to decrease votes for the given article that is greater than the current number of votes", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: -101 })
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.article.votes).toBe(0);
+        })
+    })
+});
+
+
+// + 200 - successfully increases votes
+// + 200 - successfully decreases votes
+// + 200 - successfully keeps votes the same if sent zero votes
+// + 200 - ignores unnecessary properties on the sent votes
+// + 200 - successfully doesn't go to minus votes if reached zero votes
+// 400 - returns 400 when passed an empty json object
+// 400 - returns 400 when sent an invalid value on inc_vote propert
+// 404 - passed a valid no. votes but article doesn't exist
+
+
+// UPDATE ENDPOINT.JSON!!!
