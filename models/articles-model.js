@@ -25,6 +25,15 @@ exports.selectArticles = (req, res) => {
     })
 }
 
+exports.selectCommentsById = (req, res) => {
+    return db.query(
+        `SELECT * FROM comments 
+        WHERE article_id = $1`, [req])
+        .then(({ rows }) => {
+            return rows;
+        })
+}
+
 exports.insertComments = (req, article_id) => {
     
     const parsedArticleId = parseInt(article_id)
@@ -37,16 +46,6 @@ exports.insertComments = (req, article_id) => {
         )
         .then(({ rows }) => {
             return rows[0];
-        })
-}
-
-  
-exports.selectCommentsById = (req, res) => {
-    return db.query(
-        `SELECT * FROM comments 
-        WHERE article_id = $1`, [req])
-        .then(({ rows }) => {
-            return rows;
         })
 }
 
