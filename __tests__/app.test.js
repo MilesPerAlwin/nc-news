@@ -390,5 +390,3 @@ describe("CORE: GET /api/users error test suite", () => {
         })
     })
 })
-
-// ADD TO ENDPOINTS.JSON!!
