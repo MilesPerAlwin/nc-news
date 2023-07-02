@@ -365,3 +365,28 @@ describe("CORE: DELETE /api/comments/:comment_id error test suite", () => {
         })
     })
 });
+describe("CORE: GET /api/users functionality test suite", () => {
+    test("returns a 200 GET request with an array of user objects, each with relevant properties", () => {
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.users).toHaveLength(4);
+            body.users.forEach((user) => {
+                expect(user).toHaveProperty("username");
+                expect(user).toHaveProperty("name");
+                expect(user).toHaveProperty("avatar_url");
+            })
+        })
+    })
+})
+describe("CORE: GET /api/users error test suite", () => {
+    test("returns a 404 with an error message when passed an invalid endpoint", () => {
+        return request(app)
+        .get("/api/usersss")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Path not found.");
+        })
+    })
+})
