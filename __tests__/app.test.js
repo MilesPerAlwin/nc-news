@@ -103,6 +103,16 @@ describe("CORE: GET /api/articles/:article_id error test suite", () => {
         })
     })
 });
+
+
+
+
+
+
+
+
+
+
 describe("CORE: GET /api/articles functionality test suite", () => {
     test("returns a 200 GET request with an article array of article objects without a body property in date descending order", () => {   
         return request(app)
@@ -143,6 +153,34 @@ describe("CORE: GET /api/articles functionality test suite", () => {
             })
         });
     })
+    test("returns a 200 GET request with an article array of article objects filtered by the given topic", () => {
+        return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(12)
+            body.articles.forEach((article) => {
+                expect(article.topic).toBe("mitch");
+            })
+        });
+    });
+    test("returns a 200 GET request with an article array of no article objects for a given topic does not exist", () => {
+        return request(app)
+        .get("/api/articles?topic=banana")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(0)
+        })
+    });
+    test("returns a 200 GET request with an article array of articles sorted by the given column name in ascending order", () => {
+        // return request(app)
+        // .get("/api/articles?sort_by=author")
+        // .expect(200)
+        // .then(({ body }) => {
+        //     expect(body.articles).toHaveLength(13);
+        //     expect(body.articles).toBeSortedBy('author', { ascending: true });
+        // })
+    });
 });
 describe("CORE: GET /api/articles error test suite", () => {
     test("returns a 404 with an error message when pased an invalid endpoint", () => {
@@ -154,6 +192,32 @@ describe("CORE: GET /api/articles error test suite", () => {
         })
     });
 });
+
+
+// Do tests in this order:
+
+// + /api/articles?topic=*valid topic value* (defaults to all articles) - filters by topic value - 200
+// + /api/articles?topic=banana - 200 - should return an array of no articles (cos topic doesn't exist)
+
+
+// /api/articles?sort_by=*any valid column* (defaults to date) - 200 sorts by given column
+// /api/articles?sort_by=DATE (defaults to date) - 200 sorts by date even when specified
+// /api/articles?sort_by=banana - 400 - needs valid column to work
+
+
+// test that all of these queries work together??
+
+
+// /api/articles?order=asc or desc (defaults as descending) - 200 sorts by desc as default (already done in first test though?)
+// /api/articles?order=asc or desc (defaults as descending) - 200 sorts by desc when specified
+// /api/articles?order=asc or desc (defaults as descending) - 200 sorts by asc when specified
+// /api/articles?order=banana - 400?
+
+
+// don't amend or change previous tests! Make new ones instead!
+// + UPDATE ENDPOINTS.JSON!!!
+
+
 describe("CORE: GET /api/articles/:article_id/comments functionality test suite", () => {
     test("returns a 200 GET request with an array of comments for the given article_id sorted by most recent comments first", () => {
         return request(app)
@@ -161,7 +225,7 @@ describe("CORE: GET /api/articles/:article_id/comments functionality test suite"
         .expect(200)
         .then(({ body }) => {
             expect(body.comments).toHaveLength(11);
-            expect(body.comments).toBeSorted({ descending: true });
+            expect(body.comments).toBeSortedBy('created_at', { descending: true });
             body.comments.forEach((comment) => {
                 expect(comment).toHaveProperty("comment_id", expect.any(Number));
                 expect(comment).toHaveProperty("votes", expect.any(Number));
