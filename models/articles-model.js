@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const format = require("pg-format");
 
 exports.selectArticleById = (req, res) => {
     return db.query(
@@ -16,16 +17,18 @@ exports.selectArticleById = (req, res) => {
     })
 }
 
-exports.selectArticles = (req, res) => {
+exports.selectArticles = (topic, sort_by, order) => {
     
-    return db.query(
-        `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id)::INT as comment_count
-        FROM articles
-        LEFT JOIN comments
-        ON articles.article_id = comments.article_id
-        WHERE topic LIKE COALESCE($1, '%')
-        GROUP BY articles.article_id
-        ORDER BY created_at DESC`, [req])
+    let sqlQuery = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id)::INT as comment_count
+    FROM articles
+    LEFT JOIN comments
+    ON articles.article_id = comments.article_id 
+    WHERE topic LIKE COALESCE($1, '%') 
+    GROUP BY articles.article_id ORDER BY %I %s`;
+
+    const sqlQueryFormatted = format(sqlQuery, sort_by ?? 'created_at', order ?? 'DESC')
+
+    return db.query(sqlQueryFormatted, [topic])
     .then(({ rows }) => {
         return rows;
     })

@@ -103,16 +103,6 @@ describe("CORE: GET /api/articles/:article_id error test suite", () => {
         })
     })
 });
-
-
-
-
-
-
-
-
-
-
 describe("CORE: GET /api/articles functionality test suite", () => {
     test("returns a 200 GET request with an article array of article objects without a body property in date descending order", () => {   
         return request(app)
@@ -173,17 +163,44 @@ describe("CORE: GET /api/articles functionality test suite", () => {
         })
     });
     test("returns a 200 GET request with an article array of articles sorted by the given column name in ascending order", () => {
-        // return request(app)
-        // .get("/api/articles?sort_by=author")
-        // .expect(200)
-        // .then(({ body }) => {
-        //     expect(body.articles).toHaveLength(13);
-        //     expect(body.articles).toBeSortedBy('author', { ascending: true });
-        // })
+        return request(app)
+        .get("/api/articles?sort_by=author")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(13);
+            expect(body.articles).toBeSortedBy('author', { descending: true });
+        })
+    });
+    test("returns a 200 GET request with an article array of articles sorted by date even when specified (not only as default value)", () => {
+        return request(app)
+        .get("/api/articles?sort_by=created_at")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(13);
+            expect(body.articles).toBeSortedBy('created_at', { descending: true });
+        })
+    });
+    test("returns a 200 GET request with an article array of articles sorted by the given column and ordered by ascending order when specified", () => {
+        return request(app)
+        .get("/api/articles?sort_by=author&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(13);
+            expect(body.articles).toBeSortedBy('author', { ascending: true });
+        })
+    });
+    test("returns a 200 GET request with an article array of articles sorted by the given column and ordered by descending order when specified", () => {
+        return request(app)
+        .get("/api/articles?sort_by=author&order=desc")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(13);
+            expect(body.articles).toBeSortedBy('author', { descending: true });
+        })
     });
 });
 describe("CORE: GET /api/articles error test suite", () => {
-    test("returns a 404 with an error message when pased an invalid endpoint", () => {
+    test("returns a 404 with an error message when passed an invalid endpoint", () => {
         return request(app)
         .get("/api/arrticles")
         .expect(404)
@@ -191,33 +208,23 @@ describe("CORE: GET /api/articles error test suite", () => {
             expect(body.msg).toBe("Path not found.");
         })
     });
+    test("returns a 400 with an error message when passed an invalid column name to sort", () => {
+        return request(app)
+        .get("/api/articles?sort_by=banana")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Column does not exist.");
+        })
+    });
+    test("returns a 400 with an error message when passed an invalid order value", () => {
+        return request(app)
+        .get("/api/articles?sort_by=author&order=banana")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.");
+        })
+    });
 });
-
-
-// Do tests in this order:
-
-// + /api/articles?topic=*valid topic value* (defaults to all articles) - filters by topic value - 200
-// + /api/articles?topic=banana - 200 - should return an array of no articles (cos topic doesn't exist)
-
-
-// /api/articles?sort_by=*any valid column* (defaults to date) - 200 sorts by given column
-// /api/articles?sort_by=DATE (defaults to date) - 200 sorts by date even when specified
-// /api/articles?sort_by=banana - 400 - needs valid column to work
-
-
-// test that all of these queries work together??
-
-
-// /api/articles?order=asc or desc (defaults as descending) - 200 sorts by desc as default (already done in first test though?)
-// /api/articles?order=asc or desc (defaults as descending) - 200 sorts by desc when specified
-// /api/articles?order=asc or desc (defaults as descending) - 200 sorts by asc when specified
-// /api/articles?order=banana - 400?
-
-
-// don't amend or change previous tests! Make new ones instead!
-// + UPDATE ENDPOINTS.JSON!!!
-
-
 describe("CORE: GET /api/articles/:article_id/comments functionality test suite", () => {
     test("returns a 200 GET request with an array of comments for the given article_id sorted by most recent comments first", () => {
         return request(app)
