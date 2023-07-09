@@ -198,6 +198,18 @@ describe("CORE: GET /api/articles functionality test suite", () => {
             expect(body.articles).toBeSortedBy('author', { descending: true });
         })
     });
+    test("returns a 200 GET request with an article array of articles filtered by the given topic, sorted by the given column and ordered by ascending when specified", () => {
+        return request(app)
+        .get("/api/articles?topic=mitch&sort_by=author&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(12);
+            expect(body.articles).toBeSortedBy('author', { ascending: true });
+            body.articles.forEach((article) => {
+                expect(article.topic).toBe("mitch");
+            })
+        })
+    })
 });
 describe("CORE: GET /api/articles error test suite", () => {
     test("returns a 404 with an error message when passed an invalid endpoint", () => {
