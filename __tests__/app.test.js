@@ -143,14 +143,97 @@ describe("CORE: GET /api/articles functionality test suite", () => {
             })
         });
     })
+    test("returns a 200 GET request with an article array of article objects filtered by the given topic", () => {
+        return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(12)
+            body.articles.forEach((article) => {
+                expect(article.topic).toBe("mitch");
+            })
+        });
+    });
+    test("returns a 200 GET request with an article array of no article objects for a given topic does not exist", () => {
+        return request(app)
+        .get("/api/articles?topic=banana")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(0)
+        })
+    });
+    test("returns a 200 GET request with an article array of articles sorted by the given column name in ascending order", () => {
+        return request(app)
+        .get("/api/articles?sort_by=author")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(13);
+            expect(body.articles).toBeSortedBy('author', { descending: true });
+        })
+    });
+    test("returns a 200 GET request with an article array of articles sorted by date even when specified (not only as default value)", () => {
+        return request(app)
+        .get("/api/articles?sort_by=created_at")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(13);
+            expect(body.articles).toBeSortedBy('created_at', { descending: true });
+        })
+    });
+    test("returns a 200 GET request with an article array of articles sorted by the given column and ordered by ascending order when specified", () => {
+        return request(app)
+        .get("/api/articles?sort_by=author&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(13);
+            expect(body.articles).toBeSortedBy('author', { ascending: true });
+        })
+    });
+    test("returns a 200 GET request with an article array of articles sorted by the given column and ordered by descending order when specified", () => {
+        return request(app)
+        .get("/api/articles?sort_by=author&order=desc")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(13);
+            expect(body.articles).toBeSortedBy('author', { descending: true });
+        })
+    });
+    test("returns a 200 GET request with an article array of articles filtered by the given topic, sorted by the given column and ordered by ascending when specified", () => {
+        return request(app)
+        .get("/api/articles?topic=mitch&sort_by=author&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(12);
+            expect(body.articles).toBeSortedBy('author', { ascending: true });
+            body.articles.forEach((article) => {
+                expect(article.topic).toBe("mitch");
+            })
+        })
+    })
 });
 describe("CORE: GET /api/articles error test suite", () => {
-    test("returns a 404 with an error message when pased an invalid endpoint", () => {
+    test("returns a 404 with an error message when passed an invalid endpoint", () => {
         return request(app)
         .get("/api/arrticles")
         .expect(404)
         .then(({ body }) => {
             expect(body.msg).toBe("Path not found.");
+        })
+    });
+    test("returns a 400 with an error message when passed an invalid column name to sort", () => {
+        return request(app)
+        .get("/api/articles?sort_by=banana")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Column does not exist.");
+        })
+    });
+    test("returns a 400 with an error message when passed an invalid order value", () => {
+        return request(app)
+        .get("/api/articles?sort_by=author&order=banana")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad request.");
         })
     });
 });
@@ -161,7 +244,7 @@ describe("CORE: GET /api/articles/:article_id/comments functionality test suite"
         .expect(200)
         .then(({ body }) => {
             expect(body.comments).toHaveLength(11);
-            expect(body.comments).toBeSorted({ descending: true });
+            expect(body.comments).toBeSortedBy('created_at', { descending: true });
             body.comments.forEach((comment) => {
                 expect(comment).toHaveProperty("comment_id", expect.any(Number));
                 expect(comment).toHaveProperty("votes", expect.any(Number));
